@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center mb-5 mt-5">
+    <div class="col-md-12">
+        <h1 class="display-4 fw-bold">Notice Archive & Search</h1>
+        <p class="lead text-muted">View all historical notices and use the sidebar to filter by department or keyword.
+        </p>
+        <hr>
+    </div>
+</div>
+
+
+<div class="row mt-5">
+
+    <div class="col-md-8">
+        <h2 class="mb-4">All Notices</h2>
+
+        {% if notices %}
+        {% for notice in notices %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    🔊 {{ notice.title }}
+                </h5>
+                <p class="card-text text-muted">
+                    {{ notice.get_department_display|default:"General" }}
+                    <br>
+                    Posted: {{ notice.posted_at|date:"M d, Y" }} by {{ notice.posted_by.username }}
+                </p>
+                <a href="{% url 'notice-detail' notice.pk %}" class="card-link">Read More</a>
+
+                {% if user.is_authenticated and user == notice.posted_by %}
+                <hr>
+                <a href="{% url 'notice-update' notice.pk %}" class="btn btn-sm btn-info me-2">Edit</a>
+                <a href="{% url 'notice-delete' notice.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info">No notices found matching your current filter criteria.</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="mb-3">Filter Notices</h4>
+
+        <form method="GET" action="{% url 'notice-archive' %}">
+
+            <h5 class="mt-4">Department</h5>
+            <select name="department" class="form-select mb-3">
+                <option value="" {% if not request.GET.department %}selected{% endif %}>All Departments</option>
+                <option value="CSE" {% if request.GET.department == 'CSE' %}selected{% endif %}>Computer Science</option>
+                <option value="EE" {% if request.GET.department == 'EE' %}selected{% endif %}>Electrical Engineering
+                </option>
+                <option value="ME" {% if request.GET.department == 'ME' %}selected{% endif %}>Mechanical Engineering
+                </option>
+                <option value="CE" {% if request.GET.department == 'CE' %}selected{% endif %}>Civil Engineering</option>
+            </select>
+            
+            <h5 class="mt-4">Semester</h5>
+            <select name="semester" class="form-select mb-3">
+                <option value="ALL" {% if not request.GET.semester or request.GET.semester == 'ALL' %}selected{% endif %}>
+                    All Semesters</option>
+                <option value="S1" {% if request.GET.semester == 'S1' %}selected{% endif %}>Semester 1</option>
+                <option value="S2" {% if request.GET.semester == 'S2' %}selected{% endif %}>Semester 2</option>
+                <option value="S3" {% if request.GET.semester == 'S3' %}selected{% endif %}>Semester 3</option>
+                <option value="S4" {% if request.GET.semester == 'S4' %}selected{% endif %}>Semester 4</option>
+                <option value="S5" {% if request.GET.semester == 'S5' %}selected{% endif %}>Semester 5</option>
+                <option value="S6" {% if request.GET.semester == 'S6' %}selected{% endif %}>Semester 6</option>
+                <option value="S7" {% if request.GET.semester == 'S7' %}selected{% endif %}>Semester 7</option>
+                <option value="S8" {% if request.GET.semester == 'S8' %}selected{% endif %}>Semester 8</option>
+            </select>
+
+            <h5 class="mt-4">Keyword Search</h5>
+            <div class="input-group mb-3">
+                <input type="text" name="search" class="form-control" placeholder="Search title or text..."
+                    value="{{ request.GET.search|default:'' }}">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+
+            <hr>
+            <a href="{% url 'notice-archive' %}" class="btn btn-outline-secondary w-100">Clear Filters</a>
+
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

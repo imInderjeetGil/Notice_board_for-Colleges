@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">{% if object %}Edit Notice{% else %}Create New Notice{% endif %}</h2>
+
+        <form method="POST" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            
+            <fieldset class="mb-4 p-3 border">
+                <legend class="float-none w-auto px-2">Notice Details</legend>
+                {{ form.as_p }} 
+            </fieldset>
+
+            <fieldset class="mb-4 p-3 border">
+                <legend class="float-none w-auto px-2">Attachments (Multiple Files)</legend>
+                
+                {{ attachment_formset.management_form }} {% for attachment_form in attachment_formset %}
+                    <div class="row mb-3 p-2 border-bottom">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ attachment_form.file.label }}</label>
+                            {{ attachment_form.file }}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label">{{ attachment_form.name.label }}</label>
+                            {{ attachment_form.name }}
+                        </div>
+                        
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                {{ attachment_form.DELETE }}
+                                <label class="form-check-label" for="{{ attachment_form.DELETE.id_for_label }}">Delete</label>
+                            </div>
+                        </div>
+                        
+                        {% if attachment_form.instance.pk %}{{ attachment_form.id }}{% endif %}
+                    </div>
+                {% endfor %}
+
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary mt-3">{% if object %}Update Notice{% else %}Post Notice{% endif %}</button>
+            <a href="{% url 'notice-list' %}" class="btn btn-secondary mt-3">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notification Permission Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .info { color: blue; }
+        #status { margin: 20px 0; padding: 15px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>🔔 Notification Permission Test</h1>
+    
+    <div id="status">
+        <strong>Current Status:</strong> <span id="permission-status">Checking...</span>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 1: Check Current Permission</h3>
+        <button onclick="checkPermission()">Check Permission Status</button>
+        <div id="permission-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 2: Request Permission</h3>
+        <button onclick="requestPermission()">Request Notification Permission</button>
+        <div id="request-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 3: Test Notification</h3>
+        <button onclick="testNotification()">Send Test Notification</button>
+        <div id="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 4: Reset Permission (if needed)</h3>
+        <p>If notifications are blocked, you can reset them:</p>
+        <ol>
+            <li>Click the <strong>lock icon</strong> in your browser's address bar</li>
+            <li>Set <strong>Notifications</strong> to "Allow"</li>
+            <li>Refresh this page</li>
+        </ol>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const status = Notification.permission;
+            document.getElementById('permission-status').textContent = status;
+            
+            let className = 'info';
+            if (status === 'granted') className = 'success';
+            if (status === 'denied') className = 'error';
+            
+            document.getElementById('permission-status').className = className;
+        }
+        
+        function checkPermission() {
+            updateStatus();
+            const status = Notification.permission;
+            let message = '';
+            
+            switch(status) {
+                case 'granted':
+                    message = '✅ Notifications are allowed! You can proceed with push notifications.';
+                    break;
+                case 'denied':
+                    message = '❌ Notifications are blocked. You need to allow them in browser settings.';
+                    break;
+                case 'default':
+                    message = 'ℹ️ Permission not yet requested. Click "Request Permission" below.';
+                    break;
+            }
+            
+            document.getElementById('permission-result').innerHTML = 
+                `<div class="${status === 'granted' ? 'success' : status === 'denied' ? 'error' : 'info'}">${message}</div>`;
+        }
+        
+        async function requestPermission() {
+            try {
+                const permission = await Notification.requestPermission();
+                updateStatus();
+                
+                let message = '';
+                if (permission === 'granted') {
+                    message = '✅ Permission granted! You can now receive notifications.';
+                } else if (permission === 'denied') {
+                    message = '❌ Permission denied. Check your browser settings.';
+                } else {
+                    message = 'ℹ️ Permission request dismissed.';
+                }
+                
+                document.getElementById('request-result').innerHTML = 
+                    `<div class="${permission === 'granted' ? 'success' : 'error'}">${message}</div>`;
+                    
+            } catch (error) {
+                document.getElementById('request-result').innerHTML = 
+                    `<div class="error">❌ Error requesting permission: ${error.message}</div>`;
+            }
+        }
+        
+        function testNotification() {
+            if (Notification.permission !== 'granted') {
+                document.getElementById('test-result').innerHTML = 
+                    '<div class="error">❌ Permission not granted. Please request permission first.</div>';
+                return;
+            }
+            
+            try {
+                const notification = new Notification('Test Notification', {
+                    body: 'This is a test notification from your notice board!',
+                    icon: '/static/img/illustration.jpg'
+                });
+                
+                notification.onclick = function() {
+                    window.focus();
+                    notification.close();
+                };
+                
+                document.getElementById('test-result').innerHTML = 
+                    '<div class="success">✅ Test notification sent! Check your notifications.</div>';
+                    
+            } catch (error) {
+                document.getElementById('test-result').innerHTML = 
+                    `<div class="error">❌ Error sending notification: ${error.message}</div>`;
+            }
+        }
+        
+        // Initialize
+        window.onload = function() {
+            updateStatus();
+            checkPermission();
+        };
+    </script>
+</body>
+</html>

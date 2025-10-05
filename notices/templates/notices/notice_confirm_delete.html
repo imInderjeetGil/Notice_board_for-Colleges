@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <h2 class="text-danger mb-4">Confirm Deletion</h2>
+        
+        <div class="alert alert-warning" role="alert">
+            Are you sure you want to delete the notice titled: 
+            <strong>"{{ notice.title }}"</strong>?
+            This action cannot be undone.
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+            <a href="{% url 'notice-list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}
