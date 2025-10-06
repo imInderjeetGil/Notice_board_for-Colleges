@@ -46,8 +46,8 @@ class Notice(models.Model):
     description = models.TextField()
 
     def filename(self):
-        if self.attachment:
-            return os.path.basename(self.attachment.name)
+        # This method is no longer needed since we use the Attachment model
+        # for file attachments. Keeping for backward compatibility.
         return None 
     
     class Meta:

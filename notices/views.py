@@ -151,12 +151,12 @@ class StudentNoticeListView(ListView):
 
         # 4. Apply Search Filter (Title, Description, or Posted By name)
             if search_query:
-            # Use Q objects for OR logic: search in title OR description OR username
+                # Use Q objects for OR logic: search in title OR description OR username
                 queryset = queryset.filter(
-                Q(title__icontains=search_query) |
-                Q(description__icontains=search_query) |
-                Q(posted_by__username__icontains=search_query)
-            )
+                    Q(title__icontains=search_query) |
+                    Q(description__icontains=search_query) |
+                    Q(posted_by__username__icontains=search_query)
+                )
         else:
             today = timezone.localdate()
             queryset = queryset.filter(posted_at__date=today).order_by('-posted_at')
