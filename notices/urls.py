@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from . import views
-from .views import StudentNoticeListView, AllNoticesListView,NoticeCreateView,NoticeUpdateView, NoticeDeleteView, NoticeDetailView,MyNoticesListView, SubscribeView
+from .views import StudentNoticeListView, AllNoticesListView,NoticeCreateView,NoticeUpdateView, NoticeDeleteView, NoticeDetailView,MyNoticesListView, SubscribeView,create_admin
 
 urlpatterns = [
   
@@ -15,4 +15,5 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='notices/about.html'), name='about'),
     path('contact/', TemplateView.as_view(template_name='notices/contact.html'), name='contact'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),
+    path("create-admin/", create_admin, name="create_admin"),
 ]

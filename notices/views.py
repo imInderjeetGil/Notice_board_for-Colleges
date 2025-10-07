@@ -12,13 +12,26 @@ from .forms import NoticeForm
 from .attachment_forms import AttachmentFormSet
 from django.utils import timezone
 from django.views import View # <-- NEW IMPORT
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from webpush.utils import _send_notification
+from django.contrib.auth import get_user_model
 
+def create_admin(request):
+    # Add a simple security key to prevent outsiders from using it
+    secret_key = request.GET.get("key")
+    if secret_key != "boss_secret_key":
+        return HttpResponse("❌ Unauthorized", status=403)
 
+    User = get_user_model()
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "gillamansingh0@gmail.com", "admin@123")
+        return HttpResponse("✅ Superuser created successfully.")
+    else:
+        return HttpResponse("⚠️ Superuser already exists.")
+    
 def vapid_key(request):
     return {'vapid_key': settings.WEBPUSH_SETTINGS['VAPID_PUBLIC_KEY']}
 
