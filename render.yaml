@@ -1,0 +1,22 @@
+services:
+  # A Django web service
+  - type: web
+    name: notice-board-project
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn notice_board_project.wsgi:application"
+    healthCheckPath: /health/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: notice-board-project-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+    
+  # A PostgreSQL database
+  - type: pserv
+    name: notice-board-project-db
+    plan: starter
