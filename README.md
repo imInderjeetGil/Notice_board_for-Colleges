@@ -21,8 +21,6 @@ A modern Django-based digital notice board for colleges with real-time push noti
 
 ## 📱 Live Demo
 
-[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/template/your-template-id)
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -84,15 +82,6 @@ VAPID_ADMIN_EMAIL=your-email@example.com
 3. **Test notifications** in browser
 
 ## 🚀 Deployment
-
-### Railway (Recommended)
-
-1. **Fork this repository**
-2. **Go to** [railway.app](https://railway.app)
-3. **Connect GitHub** and select your fork
-4. **Add PostgreSQL database**
-5. **Set environment variables**
-6. **Deploy!**
 
 ### Render
 
