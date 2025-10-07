@@ -155,7 +155,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": "BDFz5MqSQozsrqpifvfpAfkHPM4XQyGgLkSaQnTCokA8YvAovBuywNYeCHpsGeZRzwgkb1k1-fcdl7oFLEC35Ys",
-    "VAPID_PRIVATE_KEY": "L7UG6IBsGucbUMRAprg6r3yisjsNhmtqiT-1rgISt9s", 
-    "VAPID_ADMIN_EMAIL": "gillamansingh0@gmail.com", # Use a real admin email
+    "VAPID_PUBLIC_KEY": env('VAPID_PUBLIC_KEY'),
+    "VAPID_PRIVATE_KEY": env('VAPID_PRIVATE_KEY'), 
+    "VAPID_ADMIN_EMAIL": env('VAPID_ADMIN_EMAIL'), # Use a real admin email
 }
